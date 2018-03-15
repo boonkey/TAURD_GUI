@@ -1,0 +1,27 @@
+<html>
+    <head>
+        <link rel="manifest" href="Misc/Manifest.json">
+
+        <script src="Script/Dependencies/jquery.min.js"></script>
+        <script src="Script/Dependencies/gauge.min.js"></script>
+        
+    </head>
+    <body>
+        <div style="width: 400px; height: 300px; background-color: #999999; font-size: 35px;">
+            <canvas width="760" height="300" id="testGauge" style="width: 400px; height: 300px; margin: 0 auto"></canvas>
+            <div style="background-color: #BBBBBB; text-align: center; width: 130px; margin: 0 auto; position: relative; top: -55px;">
+                <label id="textField">0</label> 
+            </div>
+            <div style="position: relative; top: -70px; left: 270px; font-size: 14px">
+                    <label id="textField2">Kmph</label> 
+            </div>
+        </div>
+        <br><br>
+        <input type="text" id="value">
+        <button onclick="buttonClicked()">set</button>
+        <br>
+        <button onclick="getGaugeUpdate()">ATTACK!!!</button>
+
+        <script src="Script/Main.js"></script>
+    </body>
+</html>
