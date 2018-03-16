@@ -21,11 +21,6 @@ class Logger:
             writer = csv.DictWriter(csv_file, fieldnames=self.sensor_names)
             writer.writerow(values)
 
-    def worker(self):
-        while True:
-            print "new work. size of queue: ", self.message_queue.qsize()
-            self.log_line(self.message_queue.get())
-
     def random_values(self, sensorsList):
         values = {}
         for sensor in sensorsList.itervalues():
