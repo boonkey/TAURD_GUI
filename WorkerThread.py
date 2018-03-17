@@ -4,6 +4,7 @@ from Sensor import Sensor
 import csv, errno, signal, json, urllib2
 from socket import *
 import random
+import time
 
 class WorkerThread(Thread):
     def __init__(self, guireceiver, job, *args, **kwargs):
@@ -37,10 +38,19 @@ class WorkerThread(Thread):
     def random_values(self, sensorsList):
         values = {}
         for sensor in sensorsList.itervalues():
-            lower_limit = max(eval(sensor.low_val), eval(sensor.value)*0.9)
-            upper_limit = min(eval(sensor.high_val), eval(sensor.value)*1.1)
-            value = str(random.uniform(lower_limit, upper_limit))
+            current_value = eval(sensor.low_val) + eval(sensor.value)
+            if sensor.name != 'rpm':
+                new_value = current_value + random.randint(-7,7)
+            else:
+                new_value = current_value + random.randint(-700,700)
+            if new_value == eval(sensor.high_val):
+                new_value = str(int(eval(sensor.high_val)*0.9))
+            elif new_value == eval(sensor.low_val):
+                new_value = str(int(eval(sensor.high_val)*0.1)+ eval(sensor.low_val))
+            limited_value = max( min(eval(sensor.high_val),new_value),eval(sensor.low_val))
+            value = str(limited_value)
             sensor.update(value)
+            #print sensor.name, ": " , sensor.value, sensor.low_val, sensor.high_val, new_value, current_value, limited_value
             values[sensor.id] = value
         return values
 
@@ -52,6 +62,7 @@ class WorkerThread(Thread):
             string_values = ["%s:%s;" %(key,value) for key,value in values.iteritems()]
             data = "".join(string_values)
             s.sendto(data, ('255.255.255.255',5001))
+            time.sleep(0.0492)
     
     def run_logger(self):
         try:

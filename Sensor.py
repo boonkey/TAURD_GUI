@@ -7,8 +7,8 @@ class Sensor:
         self.low_val = low
         self.high_val = high
         self.value = str((eval(low)+eval(high))/2)
-        if self.value == 0:
-            self.value = "50"
+        if self.name == 'wing_position':
+            self.value = '10'
         self.history = []
 
     def update(self, new_value):

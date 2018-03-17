@@ -26,11 +26,11 @@ class WebInterface:
                     i=0
                 else:
                     #return sensors data
-                    print "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"
+                    #print "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"
                     with open('tmp','r') as f:
                         data="".join(f.readlines())
-                        print data
-                    print "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"
+                        #print data
+                    #print "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"
                     return jsonify(data)
         sensor_data = json.dumps(request.args)
         with open('tmp','w') as f:
