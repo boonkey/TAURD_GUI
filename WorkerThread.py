@@ -1,4 +1,5 @@
 from threading import Thread
+from gui import WebInterface
 import csv, errno, signal
 
 class WorkerThread(Thread):
@@ -13,6 +14,14 @@ class WorkerThread(Thread):
             self.get_udp_message()
         elif self.job == 1:
             self.run_logger()
+        elif self.job == 2:
+            self.run_gui()
+
+    def run_gui(self):
+        WebInterface.run()
+        #while self.guireceiver.keepAlive:
+        #    continue
+        print "\nGUI is shutting Down"
 
     def get_udp_message(self):
         while self.guireceiver.keepAlive:
@@ -24,10 +33,9 @@ class WorkerThread(Thread):
             with open(self.guireceiver.logger.log_file, 'ab') as csv_file:
                 writer = csv.DictWriter(csv_file, fieldnames=self.guireceiver.logger.sensor_names)
                 while self.guireceiver.keepAlive or self.guireceiver.message_queue.qsize() > 0:
-                    #print "\rkookoo"
                     values = self.guireceiver.message_queue.get()
+                    print values
                     writer.writerow(values)
-                    #print "qsize = %d" %self.guireceiver.message_queue.qsize()
             print "Logger Thread Has finished"    
         except IOError, e:
             if e.errno != errno.EINTR:

@@ -102,10 +102,13 @@ if __name__ == "__main__":
     g.client_connect()
     logger_thread = WorkerThread(g, 1)
     listener_thread = WorkerThread(g, 0)
+    webInterface_thread = WorkerThread(g, 2)
     listener_thread.start()
     logger_thread.start()
+    webInterface_thread.start()
     while g.keepAlive:
         continue
+    webInterface_thread.join()
     listener_thread.join()
     logger_thread.join()
     print "bye"
