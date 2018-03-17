@@ -29,7 +29,7 @@ $(document).ready(function(){
     speedGauge.setMinValue(0);  // Prefer setter over speedGauge.minValue = 0
     speedGauge.animationSpeed = 3;
     speedGauge.set(0); // set actual value
-    $speedLabel = gauge.find('.gaugeTitle')[0];
+    $speedLabel = gauge.find('.display').find('label')[0];
 
     // rpm
     gauge = $("#rpmGauge");
@@ -40,7 +40,7 @@ $(document).ready(function(){
     rpmGauge.setMinValue(0);  // Prefer setter over speedGauge.minValue = 0
     rpmGauge.animationSpeed = 3;
     rpmGauge.set(1); // set actual value
-    $rpmLabel = gauge.find('.gaugeTitle')[0];
+    $rpmLabel = gauge.find('.display').find('label')[0];
 
     // breaking
     gauge = $("#breakingGauge");
@@ -51,7 +51,7 @@ $(document).ready(function(){
     breakingGauge.setMinValue(0);  // Prefer setter over speedGauge.minValue = 0
     breakingGauge.animationSpeed = 3;
     breakingGauge.set(0); // set actual value
-    $breakingLabel = gauge.find('.gaugeTitle')[0];
+    $breakingLabel = gauge.find('.display').find('label')[0];
 
 
     // throttle
@@ -63,7 +63,7 @@ $(document).ready(function(){
     throttleGauge.setMinValue(0);  // Prefer setter over speedGauge.minValue = 0
     throttleGauge.animationSpeed = 3;
     throttleGauge.set(0); // set actual value
-    $throttleLabel = gauge.find('.gaugeTitle')[0];
+    $throttleLabel = gauge.find('.display').find('label')[0];
 
     // wingPos
     gauge = $("#wingPosGauge");
@@ -74,24 +74,28 @@ $(document).ready(function(){
     wingPosGauge.setMinValue(-100);  // Prefer setter over speedGauge.minValue = 0
     wingPosGauge.animationSpeed = 3;
     wingPosGauge.set(0); // set actual value
-    $wingPosLabel = gauge.find('.gaugeTitle')[0];
+    $wingPosLabel = gauge.find('.display').find('label')[0];
 });
 
 updateGauge = function(gaugeData) {
+    console.log('new gauge data');
+    console.log(gaugeData);
+
+
     speedGauge.set(parseFloat(gaugeData.speed));
-    $speedLabel.text(gaugeData.speed);
+    $speedLabel.innerHTML = gaugeData.speed;
 
     rpmGauge.set(parseFloat(gaugeData.rpm));
-    $rpmLabel.text(gaugeData.rpm);
+    $rpmLabel.innerHTML = gaugeData.rpm;
 
     breakingGauge.set(parseFloat(gaugeData.breaking));
-    $breakingLabel.text(gaugeData.breaking);
+    $breakingLabel.innerHTML = gaugeData.breaking;
 
     throttleGauge.set(parseFloat(gaugeData.throttle));
-    $throttleLabel.text(gaugeData.throttle);
+    $throttleLabel.innerHTML = gaugeData.throttle;
 
     wingPosGauge.set(parseFloat(gaugeData.wing_position));
-    $wingPosLabel.text(gaugeData.wing_position);
+    $wingPosLabel.innerHTML = gaugeData.wing_position;
 };
 
 /**
@@ -109,3 +113,7 @@ function getGaugeUpdate(){
         }
     });
 }
+
+setInterval(function () {
+    getGaugeUpdate()
+}, 50);

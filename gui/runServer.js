@@ -26,16 +26,8 @@ http.createServer(function (req, res) {
     }
     else
     {
-        // let body = [];
-        // request.on('data', (chunk) => {
-        // body.push(chunk);
-        // }).on('end', () => {
-        // body = Buffer.concat(body).toString();
-            
-        // });
-
         res.setHeader('Content-Type', 'application/json');
-        res.write(JSON.stringify({speed: 130.2}));
+        res.write(JSON.stringify({speed: 74.32, rpm: 4082, breaking: 20, throttle: 50, wing_position: -20}));
         res.end()
     }
 
@@ -58,4 +50,3 @@ function getFile(localPath, res, mimeType) {
         }
     });
 }
-
