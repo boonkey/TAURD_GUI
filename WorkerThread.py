@@ -36,7 +36,9 @@ class WorkerThread(Thread):
     def random_values(self, sensorsList):
         values = {}
         for sensor in sensorsList.itervalues():
-            value = str(random.randint(eval(sensor.low_val), eval(sensor.high_val)))
+            lower_limit = max(eval(sensor.low_val), eval(sensor.value)*0.9)
+            upper_limit = min(eval(sensor.high_val), eval(sensor.value)*1.1)
+            value = str(random.uniform(lower_limit, upper_limit))
             sensor.update(value)
             values[sensor.id] = value
         return values

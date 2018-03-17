@@ -1,7 +1,6 @@
-from flask import Flask,render_template, request, g
-import os
+from flask import Flask,render_template, request
+import os, json
 app = Flask(__name__)
-
 
 def load_page(localpath):
     with open(localpath,'rb') as indexfile:
@@ -15,9 +14,8 @@ def main_page():
     if len(request.args) == 0:
         print os.getcwd()
         return load_page("gui/index.html")
-    for item in request.args:
-        print item, " = ", request.args.get(item)
-    return "Fuck you"
+    json_args = json.dumps(request.args)
+    return json_args
 
 def run(guireceiver):
     if guireceiver == None:
