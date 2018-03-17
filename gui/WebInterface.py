@@ -1,4 +1,4 @@
-from flask import Flask,render_template, request, g
+from flask import Flask,render_template, request, jsonify
 import os, json
 app = Flask(__name__)
 
@@ -28,10 +28,10 @@ class WebInterface:
                     #return sensors data
                     print "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"
                     with open('tmp','r') as f:
-                        data="".join(f.readlines())
+                        data="".join(f.readlines()).replace('"','')
                         print data
                     print "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"
-                    return json.dumps(data)
+                    return jsonify(json.dumps(data))
         sensor_data = json.dumps(request.args)
         with open('tmp','w') as f:
             f.write(sensor_data)

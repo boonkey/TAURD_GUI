@@ -109,7 +109,7 @@ function getGaugeUpdate(){
             updateGauge(data)
         },
         error: function(){S
-            console.log("bulbul")
+            console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
         }
     });
 }
