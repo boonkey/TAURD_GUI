@@ -111,3 +111,5 @@ CarzSensorAnalyzer/CarzSensorAnalyzer.iml
 #stuff
 conf_command.sh
 .vscode
+*.csv
+tmp
