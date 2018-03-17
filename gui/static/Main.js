@@ -104,12 +104,12 @@ updateGauge = function(gaugeData) {
 function getGaugeUpdate(){
     $.ajax({
         type: 'GET',
-        url: 'http://localhost:8080/?task=0',
+        url: 'http://localhost:8000/?task=1',
         success: function(data) {
             updateGauge(data)
         },
-        error: function(){
-            alert("error loading user count");
+        error: function(){S
+            console.log("bulbul")
         }
     });
 }

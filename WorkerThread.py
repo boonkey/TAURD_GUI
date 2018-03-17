@@ -1,5 +1,5 @@
 from threading import Thread
-from gui import WebInterface
+from gui.WebInterface import WebInterface
 from Sensor import Sensor
 import csv, errno, signal, json, urllib2
 from socket import *
@@ -23,7 +23,8 @@ class WorkerThread(Thread):
             self.run_fake_messages()
 
     def run_gui(self):
-        WebInterface.run(self.guireceiver)
+        gui = WebInterface()
+        gui.run(self.guireceiver)
         #while self.guireceiver.keepAlive:
         #    continue
         print "\nGUI is shutting Down"
