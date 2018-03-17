@@ -106,3 +106,8 @@ ENV/
 CarzSensorAnalyzer/.idea/
 CarzSensorAnalyzer/Misc/
 CarzSensorAnalyzer/CarzSensorAnalyzer.iml
+
+
+#stuff
+conf_command.sh
+.vscode

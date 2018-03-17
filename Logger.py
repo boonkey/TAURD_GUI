@@ -21,15 +21,8 @@ class Logger:
             writer = csv.DictWriter(csv_file, fieldnames=self.sensor_names)
             writer.writerow(values)
 
-    def random_values(self, sensorsList):
-        values = {}
-        for sensor in sensorsList.itervalues():
-            value = str(random.randint(sensor.low_val, sensor.high_val))
-            sensor.update(value)
-            values[sensor.name] = value
-        return values
 
-if __name__ == "__main__":
+""" if __name__ == "__main__":
     print 'pizza'
     s1 = Sensor('1', 'dan', 0, 10)
     s2 = Sensor('2', 'dan_s', -5, 12)
@@ -40,3 +33,4 @@ if __name__ == "__main__":
     logger.log_init()
     for i in range(0, 10):
         logger.log_line(logger.random_values(sensors_list))
+ """
