@@ -90,7 +90,7 @@ var rpmGaugeOptions = {
     }
 };
 
-var breakingGaugeOptions = {
+var brakingGaugeOptions = {
     angle: -0.1, // The span of the speedGauge arc
     lineWidth: 0.44, // The line thickness
     radiusScale: 0.8, // Relative radius

@@ -27,7 +27,7 @@ http.createServer(function (req, res) {
     else
     {
         res.setHeader('Content-Type', 'application/json');
-        res.write(JSON.stringify({speed: 74.32, rpm: 4082, breaking: 20, throttle: 50, wing_position: -20}));
+        res.write(JSON.stringify({speed: 74.32, rpm: 4082, braking: 20, throttle: 50, wing_position: -20}));
         res.end()
     }
 

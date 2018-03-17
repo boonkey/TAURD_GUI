@@ -2,14 +2,14 @@ var isBrowserReady = false;
 
 var speedGauge;
 var rpmGauge;
-var breakingGauge;
+var brakingGauge;
 var throttleGauge;
 var wingPosGauge;
 
 
 var $speedLabel;
 var $rpmLabel;
-var $breakingLabel;
+var $brakingLabel;
 var $throttleLabel;
 var $wingPosLabel;
 
@@ -42,16 +42,16 @@ $(document).ready(function(){
     rpmGauge.set(1); // set actual value
     $rpmLabel = gauge.find('.display').find('label')[0];
 
-    // breaking
-    gauge = $("#breakingGauge");
+    // braking
+    gauge = $("#brakingGauge");
 
     target = gauge.find(".gauge")[0]; // your canvas element
-    breakingGauge = new Gauge(target).setOptions(breakingGaugeOptions); // create sexy speedGauge!
-    breakingGauge.maxValue = 100; // set max speedGauge value
-    breakingGauge.setMinValue(0);  // Prefer setter over speedGauge.minValue = 0
-    breakingGauge.animationSpeed = 3;
-    breakingGauge.set(0); // set actual value
-    $breakingLabel = gauge.find('.display').find('label')[0];
+    brakingGauge = new Gauge(target).setOptions(brakingGaugeOptions); // create sexy speedGauge!
+    brakingGauge.maxValue = 100; // set max speedGauge value
+    brakingGauge.setMinValue(0);  // Prefer setter over speedGauge.minValue = 0
+    brakingGauge.animationSpeed = 3;
+    brakingGauge.set(0); // set actual value
+    $brakingLabel = gauge.find('.display').find('label')[0];
 
 
     // throttle
@@ -88,8 +88,8 @@ updateGauge = function(gaugeData) {
     rpmGauge.set(parseFloat(gaugeData.rpm));
     $rpmLabel.innerHTML = gaugeData.rpm;
 
-    breakingGauge.set(parseFloat(gaugeData.breaking));
-    $breakingLabel.innerHTML = gaugeData.breaking;
+    brakingGauge.set(parseFloat(gaugeData.braking));
+    $brakingLabel.innerHTML = gaugeData.braking;
 
     throttleGauge.set(parseFloat(gaugeData.throttle));
     $throttleLabel.innerHTML = gaugeData.throttle;
@@ -106,9 +106,9 @@ function getGaugeUpdate(){
         type: 'GET',
         url: 'http://localhost:8000/?task=1',
         success: function(data) {
-            updateGauge(data)
+            updateGauge(JSON.parse(data));
         },
-        error: function(){S
+        error: function(){
             console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
         }
     });
