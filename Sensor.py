@@ -8,7 +8,7 @@ class Sensor:
         self.high_val = high
         self.value = str((eval(low)+eval(high))/2)
         if self.value == 0:
-            self.value = 50
+            self.value = "50"
         self.history = []
 
     def update(self, new_value):
