@@ -84,7 +84,7 @@ class GuiReceiver:
             self.message_queue.put(values_dict)
             #print "inserted to q: ", self.message_queue.qsize()
             self.i+=1
-            print "\rPackets Recieved: %d" %self.i, 
+            #print "\rPackets Recieved: %d" %self.i, 
         except IOError, e:
             if e.errno != errno.EINTR:
                 raise
@@ -99,7 +99,19 @@ if __name__ == "__main__":
     global g, logger_thread, listener_thread
     signal.signal(signal.SIGINT, signal_handler)
     g = GuiReceiver()
-    g.client_connect()
+    if 'offline' in sys.argv:
+        print "Starting in offline mode!"
+        sensor_conf = "1:speed,0,120;2:rpm,0,8000;3:braking,0,100;4:throttle,0,100;5:wing_position,-100,100;6:s6,0,255;7:s7,0,255;8:s8,0,255;9:s9,0,255;10:s10,0,255;<FIN>"
+        g.analyize_sensor_configuration(sensor_conf)
+        g.logger = Logger(g.sensors)
+        g.logger.log_init()
+        g.print_message("Client Connected", 2)
+        offline_thread = WorkerThread(g, 3)
+        offline_thread.start()
+        g.print_message("READY",1)
+    else:
+        print "Starting in Live mode"
+        g.client_connect()
     logger_thread = WorkerThread(g, 1)
     listener_thread = WorkerThread(g, 0)
     webInterface_thread = WorkerThread(g, 2)
