@@ -29,10 +29,13 @@ var defaultGaugeOptions = {
     // generateGradient: true,
     highDpiSupport: true,     // High resolution support
 
-    staticZones: [
-        {strokeStyle: "#333333", min: 0, max: 120, height: 1.0},  // Red
-        // {strokeStyle: "#F03E3E", min: 100, max: 120, height: 1.5}  // Red
-    ],
+    // staticZones: [ // color different sections
+    //     {strokeStyle: "#333333", min: 0, max: 100, height: 1.0},  // Red
+    //     {strokeStyle: "#F03E3E", min: 100, max: 120, height: 1.5}  // Red
+    // ],
+
+    colorStop: '#333333',    // color before needle
+    strokeColor: '#333333', // color after needle
 
     renderTicks: {
         divisions: 6,
@@ -48,32 +51,29 @@ var defaultGaugeOptions = {
 
 
 var SpeedGaugeOptions = {
-    angle: -0.1, // The span of the speedGauge arc
-    lineWidth: 0.44, // The line thickness
-    radiusScale: 0.8, // Relative radius
+    angle: -0.1,
+    lineWidth: 0.44,
+    radiusScale: 0.8,
     pointer: {
-        length: 0.6, // // Relative to speedGauge radius
-        strokeWidth: 0.035, // The thickness
-        color: '#EEEEEE' // Fill color
+        length: 0.6,
+        strokeWidth: 0.035,
+        color: '#EEEEEE'
     },
 
     staticLabels: {
-        font: "14px sans-serif",  // Specifies font
-        labels: [0, 20, 40, 60, 80, 100, 120],  // Print labels at these values
-        color: "#000000",  // Optional: Label text color
-        fractionDigits: 0  // Optional: Numerical precision. 0=round off.
+        font: "14px sans-serif",
+        labels: [0, 20, 40, 60, 80, 100, 120],
+        color: "#000000",
+        fractionDigits: 0
     },
 
-    limitMax: true,     // If false, max value increases automatically if value > maxValue
-    limitMin: true,     // If true, the min value of the speedGauge will be fixed
+    limitMax: true,
+    limitMin: true,
 
-
-    // generateGradient: true,
-    highDpiSupport: true,     // High resolution support
+    highDpiSupport: true,
 
     staticZones: [
-        {strokeStyle: "#333333", min: 0, max: 120, height: 1.0},  // Red
-        // {strokeStyle: "#F03E3E", min: 100, max: 120, height: 1.5}  // Red
+        {strokeStyle: "#333333", min: 0, max: 120, height: 1.0},  // grey
     ],
 
     renderTicks: {

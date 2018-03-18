@@ -1,3 +1,4 @@
+// template for gauge DOM element
 var gaugeTemplate = "\n\
 <div class='title'>\n\
     <label></label>\n\
@@ -11,6 +12,7 @@ var gaugeTemplate = "\n\
 </div>\n\
 "
 
+//  dictionary for known gauge ooptions
 var gaugeOptions = {
     "speed": SpeedGaugeOptions,
     "rpm": rpmGaugeOptions,
@@ -19,6 +21,7 @@ var gaugeOptions = {
     "wing_position": wingPosGaugeOptions,
 }
 
+// dictionary for known gauge units
 var gaugeUnits = {
     "speed": "Kmph",
     "rpm": "rpm",
@@ -27,6 +30,9 @@ var gaugeUnits = {
     "wing_position": "°",
 }
 
+/**
+ * A calss for a full gauge with all labels
+ */
 class TauGauge {
 
     /**
