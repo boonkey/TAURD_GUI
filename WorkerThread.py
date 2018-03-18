@@ -4,6 +4,7 @@ from Sensor import Sensor
 import csv, errno, signal, json, urllib2, sys
 from socket import *
 import random
+from common import *
 import time
 
 class WorkerThread(Thread):
@@ -11,7 +12,14 @@ class WorkerThread(Thread):
         super(WorkerThread, self).__init__(*args, **kwargs)
         self.guireceiver = guireceiver
         self.job = job
-        print self.job
+        if job == 0:
+            print_message('Listener thread created', 'ok')
+        elif job == 1:
+            print_message('Logger thread created', 'ok')
+        elif job == 2:
+            print_message('WebInterface thread created', 'ok')
+        elif job == 3:
+            print_message('Offline thread created', 'ok')
 
     def run(self):
         if self.job == 0:
@@ -67,16 +75,16 @@ class WorkerThread(Thread):
                 writer = csv.DictWriter(csv_file, fieldnames=self.guireceiver.logger.sensor_names)
                 while self.guireceiver.keepAlive or self.guireceiver.message_queue.qsize() > 0:
                     values = self.guireceiver.message_queue.get()
-#                    print "values : ", values
                     string_values = ["%s=%s" %(key,value) for key,value in values.iteritems()]
                     json_string = "&".join(string_values)
                     req = urllib2.Request('http://localhost:8000/?%s' %json_string)
                     try:
                         urllib2.urlopen(req)
                     except Exception:
-                        print "basa"
+                        print_message('Failed to send values to browser', 'fail')
                     writer.writerow(values)
             print "Logger Thread Has finished"    
         except IOError, e:
             if e.errno != errno.EINTR:
+                print_message('Logger Failed! errno = ' %e.errno, 'fail')
                 raise
