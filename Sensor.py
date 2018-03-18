@@ -15,6 +15,11 @@ class Sensor:
         self.value = new_value
         self.history += [new_value]
 
+    def __dict__(self):
+        return "{id: %s, name: %s, low_val: %s, high_val: %s}"  \
+            %(self.id, self.name, self.low_val, self.high_val)
+        
+
     def __str__(self):
         return "id: %s\n" \
                "name: %s\n" \

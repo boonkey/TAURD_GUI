@@ -6,6 +6,7 @@ from WorkerThread import WorkerThread
 from multiprocessing import Process, Queue
 from threading import Thread
 import os, errno, signal
+import json
 
 
 class GuiReceiver:
@@ -15,7 +16,6 @@ class GuiReceiver:
         self.remote_udp_port = 5001
         self.tcp_message = "CLIENT_CONNECT"
         self.sensors = {}
-        self.i=0
         self.keepAlive = True
         self.message_queue = Queue()
         self.udp_socket = socket(AF_INET, SOCK_DGRAM)
@@ -52,6 +52,8 @@ class GuiReceiver:
         self.analyize_sensor_configuration(data)
         self.logger = Logger(self.sensors)
         self.logger.log_init()
+        with open('tmp_info','wb') as info_file:
+            info_file.writelines(json.dumps(g.sensors, default=lambda x: x.__dict__))
         self.print_message("Client Connected", 2)
 
     def analyize_sensor_configuration(self, raw_data):
@@ -83,7 +85,6 @@ class GuiReceiver:
                         values_dict[self.sensors[s_id].name] = value
             self.message_queue.put(values_dict)
             #print "inserted to q: ", self.message_queue.qsize()
-            self.i+=1
             #print "\rPackets Recieved: %d" %self.i, 
         except IOError, e:
             if e.errno != errno.EINTR:
@@ -97,9 +98,11 @@ def signal_handler(signum, frame):
 
 if __name__ == "__main__":
     global g, logger_thread, listener_thread
+    offline = False
     signal.signal(signal.SIGINT, signal_handler)
     g = GuiReceiver()
     if 'offline' in sys.argv:
+        offline = True
         print "Starting in offline mode!"
         sensor_conf = "1:speed,0,120;2:rpm,0,8000;3:braking,0,100;4:throttle,0,100;5:wing_position,-100,100;6:s6,0,255;7:s7,0,255;8:s8,0,255;9:s9,0,255;10:s10,0,255;<FIN>"
         g.analyize_sensor_configuration(sensor_conf)
@@ -108,6 +111,8 @@ if __name__ == "__main__":
         g.print_message("Client Connected", 2)
         offline_thread = WorkerThread(g, 3)
         offline_thread.start()
+        with open('tmp_info','wb') as info_file:
+            info_file.writelines(json.dumps(g.sensors, default=lambda x: x.__dict__))
         g.print_message("READY",1)
     else:
         print "Starting in Live mode"
@@ -115,13 +120,25 @@ if __name__ == "__main__":
     logger_thread = WorkerThread(g, 1)
     listener_thread = WorkerThread(g, 0)
     webInterface_thread = WorkerThread(g, 2)
+    webInterface_thread.daemon = True
+    listener_thread.daemon = True
     listener_thread.start()
     logger_thread.start()
     webInterface_thread.start()
     while g.keepAlive:
         continue
-    webInterface_thread.join()
-    listener_thread.join()
-    logger_thread.join()
+    g.print_message("Cleanup",3)
+    # webInterface_thread.terminate()
+    # webInterface_thread.join()
+    # g.print_message('webInterface_thread joined',2)
+    # listener_thread.join()
+    # g.print_message('listener_thread joined',2)
+    # logger_thread.join()
+    # g.print_message('logger_thread joined',2)
+    if offline:
+        offline_thread.join()
+        g.print_message('offline_thread joined',2)
+    os.system('rm tmp*')
+    g.print_message("Cleanup Completed", 4)
     print "bye"
-    
+    sys.exit(0)

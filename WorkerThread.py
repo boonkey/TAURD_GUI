@@ -1,7 +1,7 @@
 from threading import Thread
 from gui.WebInterface import WebInterface
 from Sensor import Sensor
-import csv, errno, signal, json, urllib2
+import csv, errno, signal, json, urllib2, sys
 from socket import *
 import random
 import time
@@ -83,3 +83,7 @@ class WorkerThread(Thread):
         except IOError, e:
             if e.errno != errno.EINTR:
                 raise
+    
+    def exit(self):
+        print "got here"
+        sys.exit(0)

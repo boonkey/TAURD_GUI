@@ -21,10 +21,10 @@ class WebInterface:
             page = load_page("gui/index.html")
             return page
         elif 'task' in request.args:    
-                if request.args.get('task') == 0:
+                if request.args.get('task') == 'get_info':
                     #return all sensors metadata
                     i=0
-                else:
+                elif request.args.get('task') == 'get_data':
                     #return sensors data
                     #print "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"
                     with open('tmp','r') as f:
