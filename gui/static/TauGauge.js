@@ -10,7 +10,7 @@ var gaugeTemplate = "\n\
 <div class='units'>\n\
         <label></label>\n\
 </div>\n\
-"
+";
 
 //  dictionary for known gauge ooptions
 var gaugeOptions = {
@@ -19,7 +19,7 @@ var gaugeOptions = {
     "braking": brakingGaugeOptions,
     "throttle": throttleGaugeOptions,
     "wing_position": wingPosGaugeOptions,
-}
+};
 
 // dictionary for known gauge units
 var gaugeUnits = {
@@ -28,7 +28,7 @@ var gaugeUnits = {
     "braking": "%",
     "throttle": "%",
     "wing_position": "°",
-}
+};
 
 /**
  * A calss for a full gauge with all labels
@@ -45,13 +45,32 @@ class TauGauge {
      */
     constructor(name, minValue, maxValue, initValue){
         // set gauge title
-        var $container = $("#" + name);
-        $container.find('.title').find('label')[0].innerHTML = name
+        const $container = $("#" + name);
+        $container.find('.title').find('label')[0].innerHTML = name;
 
         // choose correct opts
-        var opts = defaultGaugeOptions;
+        let opts = defaultGaugeOptions;
         if(name in gaugeOptions) {
             opts = gaugeOptions[name];
+        } else {
+            const range = maxValue - minValue;
+            const divisions = TauGauge.getTicksDivideFactor(range);
+
+            const majorTick = range/divisions[0];
+
+            const labels = [];
+
+            let tickValue = parseFloat(minValue);
+
+            while(tickValue <= maxValue) {
+                labels.push(tickValue);
+                tickValue += majorTick;
+            }
+
+            opts.staticLabels.labels = labels;
+            opts.renderTicks.divisions = divisions[0];
+            opts.renderTicks.subDivisions = divisions[1];
+
         }
 
         // create gauge canvas and set opts
@@ -80,10 +99,67 @@ class TauGauge {
         this.display.innerHTML = value;
     }
 
+    /**
+     * cretes new gauge DOM element using template
+     * @param {name of the gauge to create} name 
+     */
     static addNewGaugeElement(name) {
-        var $container = $('<div class="gaugeContainer" id="' + name + '"></div>')
+        const $container = $('<div class="gaugeContainer" id="' + name + '"></div>');
         $container.append(gaugeTemplate);
         $('body').append($container);
         return $container;
+    }
+
+    /**
+     * finds a number to divide range by for a propper tick division
+     * @param {gauge value range} range 
+     */
+    static getTicksDivideFactor(range) {
+        const maxTicks = 11;
+        const minTicks = 5;
+
+        // main divisors
+        const divisors = new Set();
+        let sqrt = Math.sqrt(range);
+        for(let i = 1; i < sqrt + 1; ++i) {
+            if(range % i == 0) {
+                divisors.add(i);
+                divisors.add(range/i);
+            }
+        }
+
+        // sub divisors
+        const subDivisors = {};
+        for(let j = maxTicks; j > minTicks - 1; j--) {
+
+            // skip if not a good divisor
+            if(!(divisors.has(j))) {
+                continue;
+            }
+
+            const subRange = range/j;
+            const subSqrt = Math.sqrt(subRange);
+            for(let i = 1; i < subSqrt + 1; ++i) {
+                if(subRange % i == 0) {
+                    if(!(subRange in subDivisors)){
+                        subDivisors[subRange] = new Set();
+                    }
+
+                    subDivisors[subRange].add(i);
+                    subDivisors[subRange].add(subRange/i);
+                }
+            }
+        }
+
+        for(let i = maxTicks; i > minTicks - 1; i--) {
+            for(let j = minTicks; j < maxTicks + 1; j++) {
+                if(i in subDivisors && subDivisors[i].has(j)) {
+                    return [i, j]
+                }
+            }
+        }
+
+        return [10, 5];
+
     }
 }
