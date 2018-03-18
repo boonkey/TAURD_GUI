@@ -70,7 +70,7 @@ class GuiReceiver:
 
 
 def signal_handler(signum, frame):
-        print_message("\na signal number %d has been caught by handler" %signum, 'ok')
+        print_message("a signal number %d has been caught by handler" %signum, 'warn')
         g.keepAlive = False
         
 
@@ -122,6 +122,10 @@ if __name__ == "__main__":
         offline_thread.join()
         print_message('Offline mode closed','ok')
     os.system('rm tmp*')
+    listener_thread.join()
+    print_message('Listener thread joined','ok')
+    logger_thread.join()
+    print_message('Logger thread joined','ok')
     print_message("Cleanup Completed", 'ok')
     print_message("Good Bye!",'info')
     sys.exit(0)
