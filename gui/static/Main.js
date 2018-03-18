@@ -57,7 +57,7 @@ function createGauges(gaugeInfo) {
         if (gaugeInfo.hasOwnProperty(sensor)) {
             var sensorInfo = gaugeInfo[sensor];
             TauGauge.addNewGaugeElement(sensorInfo['name']);
-            gauges[sensorInfo['name']] = new TauGauge(sensorInfo['name'], sensorInfo['low_val'], sensorInfo['high_val'], sensorInfo['value']);
+            gauges[sensorInfo['name']] = new TauGauge(sensorInfo['name'], sensorInfo['low_val'], sensorInfo['high_val']);
         }
     }
 }

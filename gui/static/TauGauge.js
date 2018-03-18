@@ -43,35 +43,13 @@ class TauGauge {
      * @param {gauge max} maxValue 
      * @param {gauge initial value} initValue 
      */
-    constructor(name, minValue, maxValue, initValue){
+    constructor(name, minValue, maxValue){
         // set gauge title
         const $container = $("#" + name);
         $container.find('.title').find('label')[0].innerHTML = name;
 
         // choose correct opts
-        let opts = defaultGaugeOptions;
-        if(name in gaugeOptions) {
-            opts = gaugeOptions[name];
-        } else {
-            const range = maxValue - minValue;
-            const divisions = TauGauge.getTicksDivideFactor(range);
-
-            const majorTick = range/divisions[0];
-
-            const labels = [];
-
-            let tickValue = parseFloat(minValue);
-
-            while(tickValue <= maxValue) {
-                labels.push(tickValue);
-                tickValue += majorTick;
-            }
-
-            opts.staticLabels.labels = labels;
-            opts.renderTicks.divisions = divisions[0];
-            opts.renderTicks.subDivisions = divisions[1];
-
-        }
+        let opts = TauGauge.getGaugeOpts(name, minValue, maxValue);
 
         // create gauge canvas and set opts
         this.gauge = new Gauge($container.find(".gauge")[0]).setOptions(opts); // create speedgauge
@@ -100,7 +78,7 @@ class TauGauge {
     }
 
     /**
-     * cretes new gauge DOM element using template
+     * creates new gauge DOM element using template
      * @param {name of the gauge to create} name 
      */
     static addNewGaugeElement(name) {
@@ -108,6 +86,40 @@ class TauGauge {
         $container.append(gaugeTemplate);
         $('body').append($container);
         return $container;
+    }
+
+    /**
+     * gets the correct options for the gauge of that name
+     * @param {name of the gauge to get options for} name
+     * @param {minimum value for gauge (not needed for known gauges)} minValue
+     * @param {maximum value for gauge (not needed for known gauges)} maxValue
+     */
+    static getGaugeOpts(name, minValue, maxValue) {
+        let opts = defaultGaugeOptions;
+
+        if(name in gaugeOptions) {
+            opts = gaugeOptions[name];
+        } else {
+            const range = maxValue - minValue;
+            const divisions = TauGauge.getTicksDivideFactor(range);
+
+            const majorTick = range/divisions[0];
+
+            const labels = [];
+
+            let tickValue = parseFloat(minValue);
+
+            while(tickValue <= maxValue) {
+                labels.push(tickValue);
+                tickValue += majorTick;
+            }
+
+            opts.staticLabels.labels = labels;
+            opts.renderTicks.divisions = divisions[0];
+            opts.renderTicks.subDivisions = divisions[1];
+        }
+
+        return opts;
     }
 
     /**
