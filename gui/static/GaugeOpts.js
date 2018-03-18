@@ -5,6 +5,47 @@
  * ---------------------
  */
 
+var defaultGaugeOptions = {
+    angle: -0.1, // The span of the speedGauge arc
+    lineWidth: 0.44, // The line thickness
+    radiusScale: 0.8, // Relative radius
+    pointer: {
+        length: 0.6, // // Relative to speedGauge radius
+        strokeWidth: 0.035, // The thickness
+        color: '#EEEEEE' // Fill color
+    },
+
+    staticLabels: {
+        font: "14px sans-serif",  // Specifies font
+        labels: [0, 20, 40, 60, 80, 100, 120],  // Print labels at these values
+        color: "#000000",  // Optional: Label text color
+        fractionDigits: 0  // Optional: Numerical precision. 0=round off.
+    },
+
+    limitMax: true,     // If false, max value increases automatically if value > maxValue
+    limitMin: true,     // If true, the min value of the speedGauge will be fixed
+
+
+    // generateGradient: true,
+    highDpiSupport: true,     // High resolution support
+
+    staticZones: [
+        {strokeStyle: "#333333", min: 0, max: 120, height: 1.0},  // Red
+        // {strokeStyle: "#F03E3E", min: 100, max: 120, height: 1.5}  // Red
+    ],
+
+    renderTicks: {
+        divisions: 6,
+        divWidth: 1.1,
+        divLength: 0.4,
+        divColor: "#cccccc",
+        subDivisions: 4,
+        subLength: 0.2,
+        subWidth: 0.6,
+        subColor: "#cccccc"
+    }
+};
+
 
 var SpeedGaugeOptions = {
     angle: -0.1, // The span of the speedGauge arc

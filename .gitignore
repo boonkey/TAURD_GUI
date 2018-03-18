@@ -106,6 +106,9 @@ ENV/
 CarzSensorAnalyzer/.idea/
 CarzSensorAnalyzer/Misc/
 CarzSensorAnalyzer/CarzSensorAnalyzer.iml
+.DS_Store
+gui/.idea/
+gui/gui.iml
 
 
 #stuff

@@ -1,4 +1,4 @@
-var isBrowserReady = false;
+var hasGotInfo = false;
 
 var speedGauge;
 var rpmGauge;
@@ -6,114 +6,83 @@ var brakingGauge;
 var throttleGauge;
 var wingPosGauge;
 
+var gauges = {}
+var gaugeOptions = {
+    "speed": SpeedGaugeOptions,
+    "rpm": rpmGaugeOptions,
+    "braking": brakingGaugeOptions,
+    "throttle": throttleGaugeOptions,
+    "wing_position": wingPosGaugeOptions,
+}
 
-var $speedLabel;
-var $rpmLabel;
-var $brakingLabel;
-var $throttleLabel;
-var $wingPosLabel;
-
+var gaugeUnits = {
+    "speed": "Kmph",
+    "rpm": "rpm",
+    "braking": "%",
+    "throttle": "%",
+    "wing_position": "°",
+}
 
 /**
  * Handle UI elements when doc is ready
  */
-$(document).ready(function(){
+$(document).ready(function () {
 
-
-    // speed
-    var gauge = $("#speedGauge");
-
-    var target = gauge.find(".gauge")[0]; // your canvas element
-    speedGauge = new Gauge(target).setOptions(SpeedGaugeOptions); // create sexy speedGauge!
-    speedGauge.maxValue = 120; // set max speedGauge value
-    speedGauge.setMinValue(0);  // Prefer setter over speedGauge.minValue = 0
-    speedGauge.animationSpeed = 3;
-    speedGauge.set(0); // set actual value
-    $speedLabel = gauge.find('.display').find('label')[0];
-
-    // rpm
-    gauge = $("#rpmGauge");
-
-    target = gauge.find(".gauge")[0]; // your canvas element
-    rpmGauge = new Gauge(target).setOptions(rpmGaugeOptions); // create sexy speedGauge!
-    rpmGauge.maxValue = 8000; // set max speedGauge value
-    rpmGauge.setMinValue(0);  // Prefer setter over speedGauge.minValue = 0
-    rpmGauge.animationSpeed = 3;
-    rpmGauge.set(1); // set actual value
-    $rpmLabel = gauge.find('.display').find('label')[0];
-
-    // braking
-    gauge = $("#brakingGauge");
-
-    target = gauge.find(".gauge")[0]; // your canvas element
-    brakingGauge = new Gauge(target).setOptions(brakingGaugeOptions); // create sexy speedGauge!
-    brakingGauge.maxValue = 100; // set max speedGauge value
-    brakingGauge.setMinValue(0);  // Prefer setter over speedGauge.minValue = 0
-    brakingGauge.animationSpeed = 3;
-    brakingGauge.set(0); // set actual value
-    $brakingLabel = gauge.find('.display').find('label')[0];
-
-
-    // throttle
-    gauge = $("#throttleGauge");
-
-    target = gauge.find(".gauge")[0]; // your canvas element
-    throttleGauge = new Gauge(target).setOptions(throttleGaugeOptions); // create sexy speedGauge!
-    throttleGauge.maxValue = 100; // set max speedGauge value
-    throttleGauge.setMinValue(0);  // Prefer setter over speedGauge.minValue = 0
-    throttleGauge.animationSpeed = 3;
-    throttleGauge.set(0); // set actual value
-    $throttleLabel = gauge.find('.display').find('label')[0];
-
-    // wingPos
-    gauge = $("#wingPosGauge");
-
-    target = gauge.find(".gauge")[0]; // your canvas element
-    wingPosGauge = new Gauge(target).setOptions(wingPosGaugeOptions); // create sexy speedGauge!
-    wingPosGauge.maxValue = 100; // set max speedGauge value
-    wingPosGauge.setMinValue(-100);  // Prefer setter over speedGauge.minValue = 0
-    wingPosGauge.animationSpeed = 3;
-    wingPosGauge.set(0); // set actual value
-    $wingPosLabel = gauge.find('.display').find('label')[0];
+    //get all gauge info
+    
+    getGaugeInfo()
+    
+    setInterval(function () {
+        getGaugeUpdate()
+    }, 50);
+    
 });
-
-updateGauge = function(gaugeData) {
-    console.log('new gauge data');
-    console.log(gaugeData);
-
-
-    speedGauge.set(parseFloat(gaugeData.speed));
-    $speedLabel.innerHTML = gaugeData.speed;
-
-    rpmGauge.set(parseFloat(gaugeData.rpm));
-    $rpmLabel.innerHTML = gaugeData.rpm;
-
-    brakingGauge.set(parseFloat(gaugeData.braking));
-    $brakingLabel.innerHTML = gaugeData.braking;
-
-    throttleGauge.set(parseFloat(gaugeData.throttle));
-    $throttleLabel.innerHTML = gaugeData.throttle;
-
-    wingPosGauge.set(parseFloat(gaugeData.wing_position));
-    $wingPosLabel.innerHTML = gaugeData.wing_position;
-};
-
-/**
- * get request
- */
-function getGaugeUpdate(){
+function getGaugeInfo() {
     $.ajax({
         type: 'GET',
-        url: 'http://localhost:8000/?task=1',
-        success: function(data) {
-            updateGauge(JSON.parse(data));
+        url: 'http://localhost:8000/?task=get_info',
+        success: function (data) {
+            if(!hasGotInfo){
+                createGauges(JSON.parse(data));
+                hasGotInfo = true;
+            }
         },
-        error: function(){
-            console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+        error: function () {
+            console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@Failure to get info@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
         }
     });
 }
 
-setInterval(function () {
-    getGaugeUpdate()
-}, 50);
+function createGauges(gaugeInfo) {
+    for (var sensor in gaugeInfo) {
+        if (gaugeInfo.hasOwnProperty(sensor)) {
+            var sensorInfo = gaugeInfo[sensor];
+            var container = TauGauge.addNewGaugeElement(sensorInfo['name']);
+            gauges[sensorInfo['name']] = new TauGauge(sensorInfo['name'], sensorInfo['low_val'], sensorInfo['high_val'], sensorInfo['value']);
+        }
+    }
+}
+
+function getGaugeUpdate() {
+    $.ajax({
+        type: 'GET',
+        url: 'http://localhost:8000/?task=get_data',
+        success: function (data) {
+            if(hasGotInfo) {
+                updateAllGauges(JSON.parse(data));
+            }
+            
+        },
+        error: function () {
+            console.log("@@@@@@@@@@@@@@@@@@@@@@@@@Failure to get data@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+        }
+    });
+}
+
+function updateAllGauges(newValues) {
+    for (var sensor in newValues) {
+        if (newValues.hasOwnProperty(sensor)) {
+            gauges[sensor].updateGauge(newValues[sensor]);
+        }
+    }
+}
