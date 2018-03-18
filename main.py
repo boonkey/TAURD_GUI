@@ -25,16 +25,24 @@ class GuiReceiver:
     def client_connect(self):
         print_message("starting connection", 'ok')
         sock = socket(AF_INET, SOCK_STREAM)
-        sock.connect((self.remote_ip, self.remote_tcp_port))
-        sock.send(self.tcp_message)
-        data = sock.recv(1024)
-        sock.close()
+        try:
+            sock.connect((self.remote_ip, self.remote_tcp_port))
+            sock.send(self.tcp_message)
+            data = sock.recv(1024)
+            sock.close()
+        except Exception:
+            print_message('Failed to connect to client','fail')
+            return False
         self.analyize_sensor_configuration(data)
         self.logger = Logger(self.sensors)
         self.logger.log_init()
-        with open('tmp_info','wb') as info_file:
-            info_file.writelines(json.dumps(g.sensors, default=lambda x: x.__dict__))
+        try:
+            with open('tmp_info','wb') as info_file:
+                info_file.writelines(json.dumps(g.sensors, default=lambda x: x.__dict__))
+        except IOError, e:
+            print_message('Failed to send metadata', 'fail')
         print_message("Client Connected", 'ok')
+        return True
 
     def analyize_sensor_configuration(self, raw_data):
         sensors = raw_data.split(";")
@@ -67,10 +75,11 @@ class GuiReceiver:
         except IOError, e:
             if e.errno != errno.EINTR:
                 raise
+            print_message('Failed to recieve UDP packet')
 
 
 def signal_handler(signum, frame):
-        print_message("\na signal number %d has been caught by handler" %signum, 'ok')
+        print_message("a signal number %d has been caught by handler" %signum, 'warn')
         g.keepAlive = False
         
 
@@ -98,19 +107,21 @@ if __name__ == "__main__":
         print_message("Offline mode setup completed",'ok')
     else:
         print_message("Starting in Live mode", 'info')
-        g.client_connect()
+        if not g.client_connect():
+            print_message('Failed to start. exiting','fail')
+            sys.exit(-1)
         print_message("Live mode setup completed",'ok')
     print_message('Starting worker threads', 'info')
-    logger_thread = WorkerThread(g, 1)
     listener_thread = WorkerThread(g, 0)
-    webInterface_thread = WorkerThread(g, 2)
-    webInterface_thread.daemon = True
     listener_thread.daemon = True
-    logger_thread.daemon = True
     listener_thread.start()
     print_message('Listener thread started', 'ok')
+    logger_thread = WorkerThread(g, 1)
+    logger_thread.daemon = True
     logger_thread.start()
     print_message('Logger thread started', 'ok')
+    webInterface_thread = WorkerThread(g, 2, verbose='verbose' in sys.argv)
+    webInterface_thread.daemon = True
     webInterface_thread.start()
     print_message('WebInterface thread started', 'ok')
     print_message('Initialization completed succesfully', 'ok')
@@ -122,6 +133,10 @@ if __name__ == "__main__":
         offline_thread.join()
         print_message('Offline mode closed','ok')
     os.system('rm tmp*')
+    listener_thread.join()
+    print_message('Listener thread joined','ok')
+    logger_thread.join()
+    print_message('Logger thread joined','ok')
     print_message("Cleanup Completed", 'ok')
     print_message("Good Bye!",'info')
     sys.exit(0)

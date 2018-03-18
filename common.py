@@ -52,37 +52,3 @@ def showoff():
         for j in range(0,9):
             print "\033[%d%dm@"%(i,j),
         print ''
-
-def find_ticks(min, max):
-    n = max - min
-    factorization = set(reduce(list.__add__, 
-                ([i, n//i] for i in range(1, int(pow(n, 0.5) + 1)) if n % i == 0)))
-    
-    for j in range(-11, -5):
-        m = n / -j
-        small_fact = set(reduce(list.__add__, 
-                ([i, m//i] for i in range(1, int(pow(m, 0.5) + 1)) if m % i == 0)))
-        if 4 in small_fact:
-            print '%d big ticks, 4 small ticks' %-j
-    for j in range(-11, -5):
-        m = n / -j
-        small_fact = set(reduce(list.__add__, 
-                ([i, m//i] for i in range(1, int(pow(m, 0.5) + 1)) if m % i == 0)))
-        if 5 in small_fact:
-            print '%d big ticks, 5 small ticks' %-j
-    
-    for j in range(-11, -5):
-        m = n / -j
-        small_fact = set(reduce(list.__add__, 
-                ([i, m//i] for i in range(1, int(pow(m, 0.5) + 1)) if m % i == 0)))
-        if 3 in small_fact:
-            print '%d big ticks, 3 small ticks' %-j
-
-    for j in range(-11, -5):
-        m = n / -j
-        small_fact = set(reduce(list.__add__, 
-                ([i, m//i] for i in range(1, int(pow(m, 0.5) + 1)) if m % i == 0)))
-        if 2 in small_fact:
-            print '%d big ticks, 2 small ticks' %-j
-
-find_ticks(0,255)

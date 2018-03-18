@@ -5,13 +5,15 @@ import csv, errno, signal, json, urllib2, sys
 from socket import *
 import random
 from common import *
+from Queue import Empty
 import time
 
 class WorkerThread(Thread):
-    def __init__(self, guireceiver, job, *args, **kwargs):
+    def __init__(self, guireceiver, job, verbose=False, *args, **kwargs):
         super(WorkerThread, self).__init__(*args, **kwargs)
         self.guireceiver = guireceiver
         self.job = job
+        self.verbose = verbose
         if job == 0:
             print_message('Listener thread created', 'ok')
         elif job == 1:
@@ -32,14 +34,14 @@ class WorkerThread(Thread):
             self.run_fake_messages()
 
     def run_gui(self):
-        gui = WebInterface()
+        gui = WebInterface(self.verbose)
         gui.run(self.guireceiver)
         print "\nGUI is shutting Down"
 
     def get_udp_message(self):
         while self.guireceiver.keepAlive:
             self.guireceiver.get_udp_message()
-        print "\nListener Thread Has finished"    
+        print_message("Listener Thread Has finished",'ok')
 
     def random_values(self, sensorsList):
         values = {}
@@ -74,16 +76,22 @@ class WorkerThread(Thread):
             with open(self.guireceiver.logger.log_file, 'ab') as csv_file:
                 writer = csv.DictWriter(csv_file, fieldnames=self.guireceiver.logger.sensor_names)
                 while self.guireceiver.keepAlive or self.guireceiver.message_queue.qsize() > 0:
-                    values = self.guireceiver.message_queue.get()
-                    string_values = ["%s=%s" %(key,value) for key,value in values.iteritems()]
-                    json_string = "&".join(string_values)
-                    req = urllib2.Request('http://localhost:8000/?%s' %json_string)
                     try:
-                        urllib2.urlopen(req)
-                    except Exception:
-                        print_message('Failed to send values to browser', 'fail')
-                    writer.writerow(values)
-            print "Logger Thread Has finished"    
+                        values = self.guireceiver.message_queue.get(timeout = 1)
+                        string_values = ["%s=%s" %(key,value) for key,value in values.iteritems()]
+                        json_string = "&".join(string_values)
+                        req = urllib2.Request('http://localhost:8000/?%s' %json_string)
+                        try:
+                            urllib2.urlopen(req)
+                        except Exception:
+                            print_message('Failed to send values to browser', 'fail')
+                        writer.writerow(values)
+                    except EOFError, e:
+                        print_message('Logger - getting from empty queue', 'fail')
+                    except Empty, e:
+                        print_message('Logger - queue timed out', 'fail')
+
+            print_message("Logger Thread Has finished",'ok')
         except IOError, e:
             if e.errno != errno.EINTR:
                 print_message('Logger Failed! errno = ' %e.errno, 'fail')
