@@ -1,12 +1,10 @@
 from socket import *
 from Sensor import Sensor
 from Logger import Logger
-import csv, sys
 from WorkerThread import WorkerThread
 from multiprocessing import Process, Queue
 from threading import Thread
-import os, errno, signal
-import json
+import os, errno, signal, csv, sys, json
 
 
 class GuiReceiver:
