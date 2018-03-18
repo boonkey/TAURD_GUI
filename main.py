@@ -70,7 +70,7 @@ class GuiReceiver:
 
 
 def signal_handler(signum, frame):
-        print_message("\na signal number %d has been caught by handler" %signum, 'ok')
+        print_message("a signal number %d has been caught by handler" %signum, 'warn')
         g.keepAlive = False
         
 
