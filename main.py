@@ -1,11 +1,11 @@
-from socket import *
+from socket import *#
 from Sensor import Sensor
 from Logger import Logger
 from WorkerThread import WorkerThread
 from multiprocessing import Process, Queue
 from threading import Thread
 import os, errno, signal, csv, sys, json
-
+from common import print_message
 
 class GuiReceiver:
     def __init__(self):
@@ -21,27 +21,9 @@ class GuiReceiver:
         self.udp_socket.bind(('', 5001))
         if 'linux' in sys.platform:
             os.system("sudo ifconfig eth1 192.168.1.6")
-
-    def print_color_header(self, color):
-        if color == 0:
-            return '\033[0m'
-        elif color == 1: #GREEN
-            return '\033[32m'
-        elif color == 2: #YELLOW
-            return '\033[33m'
-        elif color == 3: #RED
-            return '\033[31m'
-        elif color == 4: #BLUE
-            return '\033[34m'
-        elif color == 5: #Purple
-            return '\033[35m'
-    
-    def print_message(self, msg, color=0):
-        print_msg = self.print_color_header(color) + msg + self.print_color_header(0)
-        print print_msg
     
     def client_connect(self):
-        self.print_message("starting connection", 1)
+        print_message("starting connection", 1)
         sock = socket(AF_INET, SOCK_STREAM)
         sock.connect((self.remote_ip, self.remote_tcp_port))
         sock.send(self.tcp_message)
@@ -52,7 +34,7 @@ class GuiReceiver:
         self.logger.log_init()
         with open('tmp_info','wb') as info_file:
             info_file.writelines(json.dumps(g.sensors, default=lambda x: x.__dict__))
-        self.print_message("Client Connected", 2)
+        print_message("Client Connected", 2)
 
     def analyize_sensor_configuration(self, raw_data):
         sensors = raw_data.split(";")
@@ -82,8 +64,6 @@ class GuiReceiver:
                         self.sensors[s_id].update(value)
                         values_dict[self.sensors[s_id].name] = value
             self.message_queue.put(values_dict)
-            #print "inserted to q: ", self.message_queue.qsize()
-            #print "\rPackets Recieved: %d" %self.i, 
         except IOError, e:
             if e.errno != errno.EINTR:
                 raise
@@ -106,12 +86,12 @@ if __name__ == "__main__":
         g.analyize_sensor_configuration(sensor_conf)
         g.logger = Logger(g.sensors)
         g.logger.log_init()
-        g.print_message("Client Connected", 2)
+        print_message("Client Connected", 2)
         offline_thread = WorkerThread(g, 3)
         offline_thread.start()
         with open('tmp_info','wb') as info_file:
             info_file.writelines(json.dumps(g.sensors, default=lambda x: x.__dict__))
-        g.print_message("READY",1)
+        print_message("READY",1)
     else:
         print "Starting in Live mode"
         g.client_connect()
@@ -120,23 +100,17 @@ if __name__ == "__main__":
     webInterface_thread = WorkerThread(g, 2)
     webInterface_thread.daemon = True
     listener_thread.daemon = True
+    logger_thread.daemon = True
     listener_thread.start()
     logger_thread.start()
     webInterface_thread.start()
     while g.keepAlive:
         continue
-    g.print_message("Cleanup",3)
-    # webInterface_thread.terminate()
-    # webInterface_thread.join()
-    # g.print_message('webInterface_thread joined',2)
-    # listener_thread.join()
-    # g.print_message('listener_thread joined',2)
-    # logger_thread.join()
-    # g.print_message('logger_thread joined',2)
+    print_message("Cleanup",3)
     if offline:
         offline_thread.join()
-        g.print_message('offline_thread joined',2)
+        print_message('offline_thread joined',2)
     os.system('rm tmp*')
-    g.print_message("Cleanup Completed", 4)
+    print_message("Cleanup Completed", 4)
     print "bye"
     sys.exit(0)

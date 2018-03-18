@@ -20,17 +20,3 @@ class Logger:
         with open(self.log_file, 'ab') as csv_file:
             writer = csv.DictWriter(csv_file, fieldnames=self.sensor_names)
             writer.writerow(values)
-
-
-""" if __name__ == "__main__":
-    print 'pizza'
-    s1 = Sensor('1', 'dan', 0, 10)
-    s2 = Sensor('2', 'dan_s', -5, 12)
-    s3 = Sensor('3', 'dan_sh', 0, 6000)
-    sensors_list = {'1': s1, '2': s2, '3': s3}
-    logger = Logger(sensors_list)
-    print logger.log_file
-    logger.log_init()
-    for i in range(0, 10):
-        logger.log_line(logger.random_values(sensors_list))
- """

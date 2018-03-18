@@ -6,7 +6,6 @@ app = Flask(__name__)
 def load_page(localpath):
     with open(localpath,'rb') as indexfile:
         data = indexfile.readlines()
-    #print data
     return "".join(data)
 
 class WebInterface:

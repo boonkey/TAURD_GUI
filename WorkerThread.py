@@ -26,8 +26,6 @@ class WorkerThread(Thread):
     def run_gui(self):
         gui = WebInterface()
         gui.run(self.guireceiver)
-        #while self.guireceiver.keepAlive:
-        #    continue
         print "\nGUI is shutting Down"
 
     def get_udp_message(self):
@@ -50,7 +48,6 @@ class WorkerThread(Thread):
             limited_value = max( min(eval(sensor.high_val),new_value),eval(sensor.low_val))
             value = str(limited_value)
             sensor.update(value)
-            #print sensor.name, ": " , sensor.value, sensor.low_val, sensor.high_val, new_value, current_value, limited_value
             values[sensor.id] = value
         return values
 
@@ -83,7 +80,3 @@ class WorkerThread(Thread):
         except IOError, e:
             if e.errno != errno.EINTR:
                 raise
-    
-    def exit(self):
-        print "got here"
-        sys.exit(0)
