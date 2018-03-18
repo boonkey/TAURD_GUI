@@ -4,13 +4,15 @@ import os, json, logging
 
 app = Flask(__name__)
 
-log = logging.getLogger('werkzeug')
-log.setLevel(logging.ERROR)
-
 
 class WebInterface:
-    def __init__(self):
+    def __init__(self, verbose=False):
         self.info = "dan"
+        if not verbose:
+            log = logging.getLogger('werkzeug')
+            log.setLevel(logging.ERROR)
+        else:
+            print_message('WebInterface starting in verbose mode','info')
 
     @app.route("/")
     def main_page(self = None):

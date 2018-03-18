@@ -103,7 +103,7 @@ if __name__ == "__main__":
     print_message('Starting worker threads', 'info')
     logger_thread = WorkerThread(g, 1)
     listener_thread = WorkerThread(g, 0)
-    webInterface_thread = WorkerThread(g, 2)
+    webInterface_thread = WorkerThread(g, 2, verbose='verbose' in sys.argv)
     webInterface_thread.daemon = True
     listener_thread.daemon = True
     logger_thread.daemon = True

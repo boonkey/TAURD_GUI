@@ -9,10 +9,11 @@ from Queue import Empty
 import time
 
 class WorkerThread(Thread):
-    def __init__(self, guireceiver, job, *args, **kwargs):
+    def __init__(self, guireceiver, job, verbose=False, *args, **kwargs):
         super(WorkerThread, self).__init__(*args, **kwargs)
         self.guireceiver = guireceiver
         self.job = job
+        self.verbose = verbose
         if job == 0:
             print_message('Listener thread created', 'ok')
         elif job == 1:
@@ -33,7 +34,7 @@ class WorkerThread(Thread):
             self.run_fake_messages()
 
     def run_gui(self):
-        gui = WebInterface()
+        gui = WebInterface(self.verbose)
         gui.run(self.guireceiver)
         print "\nGUI is shutting Down"
 
