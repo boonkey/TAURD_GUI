@@ -29,15 +29,19 @@ var gaugeUnits = {
 $(document).ready(function () {
 
     //get all gauge info
+    getGaugeInfo();
     
-    getGaugeInfo()
-    
+    //get constant updates
     setInterval(function () {
-        getGaugeUpdate()
+        getGaugeUpdate();
     }, 50);
     
 });
+
+var getInfoTimeoutCounter = 0;
+var getInfoTimeoutThreshold = 50;
 function getGaugeInfo() {
+    
     $.ajax({
         type: 'GET',
         url: 'http://localhost:8000/?task=get_info',
@@ -48,7 +52,14 @@ function getGaugeInfo() {
             }
         },
         error: function () {
-            console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@Failure to get info@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+            console.log("Failure to get info")
+            
+            if(getInfoTimeoutCounter >= getInfoTimeoutThreshold) {
+                console.log('retry' + ++getInfoTimeoutCounter);
+                getGaugeInfo();
+            } else {
+                console.log('get gauge info timeout, failed '+ getInfoTimeoutThreshold +' times');
+            }
         }
     });
 }
@@ -74,7 +85,7 @@ function getGaugeUpdate() {
             
         },
         error: function () {
-            console.log("@@@@@@@@@@@@@@@@@@@@@@@@@Failure to get data@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+            console.log("Failure to get data")
         }
     });
 }

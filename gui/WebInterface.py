@@ -1,12 +1,12 @@
 from flask import Flask,render_template, request, jsonify
-import os, json
+from common import *
+import os, json, logging
+
 app = Flask(__name__)
 
+log = logging.getLogger('werkzeug')
+log.setLevel(logging.ERROR)
 
-def load_page(localpath):
-    with open(localpath,'rb') as indexfile:
-        data = indexfile.readlines()
-    return "".join(data)
 
 class WebInterface:
     def __init__(self):
@@ -23,11 +23,12 @@ class WebInterface:
                     #return all sensors metadata
                     with open('tmp_info','r') as f:
                         data="".join(f.readlines())
+                    return jsonify(data)
                 elif request.args.get('task') == 'get_data':
                     #return sensors data
                     with open('tmp','r') as f:
                         data="".join(f.readlines())
-                return jsonify(data)
+                    return jsonify(data)
         sensor_data = json.dumps(request.args)
         with open('tmp','w') as f:
             f.write(sensor_data)
