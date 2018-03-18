@@ -18,6 +18,7 @@ class GuiReceiver:
         self.message_queue = Queue()
         self.udp_socket = socket(AF_INET, SOCK_DGRAM)
         self.udp_socket.setsockopt(SOL_SOCKET, SO_BROADCAST, 1)
+        self.udp_socket.settimeout(0.2)
         self.udp_socket.bind(('', 5001))
         # if 'linux' in sys.platform:
         #     os.system("sudo ifconfig eth1 192.168.1.6")
@@ -72,14 +73,15 @@ class GuiReceiver:
                         self.sensors[s_id].update(value)
                         values_dict[self.sensors[s_id].name] = value
             self.message_queue.put(values_dict)
+        except timeout, e:
+            print_message('Failed to recieve UDP packet')
         except IOError, e:
             if e.errno != errno.EINTR:
                 raise
-            print_message('Failed to recieve UDP packet')
 
 
 def signal_handler(signum, frame):
-        print_message("a signal number %d has been caught by handler" %signum, 'warn')
+        print_message('Signal Received - Quitting', 'warn')
         g.keepAlive = False
         
 
@@ -133,6 +135,7 @@ if __name__ == "__main__":
         offline_thread.join()
         print_message('Offline mode closed','ok')
     os.system('rm tmp*')
+    print_message('Temporary files removed','ok')
     listener_thread.join()
     print_message('Listener thread joined','ok')
     logger_thread.join()

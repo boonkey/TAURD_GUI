@@ -14,13 +14,13 @@ def print_color_header(color):
     elif color == 5 or color =='purple':  # Purple
         return '\033[35m'
     elif color == 'ok':
-        return '\033[42m[  OK  ]\033[0m     '
+        return '\r\033[42m[  OK  ]\033[0m     '
     elif color == 'warn':
-        return '\033[43m[ WARN ]\033[0m     '
+        return '\r\033[43m[ WARN ]\033[0m     '
     elif color == 'fail':
-        return '\033[41m[ FAIL ]\033[0m     '
+        return '\r\033[41m[ FAIL ]\033[0m     '
     elif color == 'info':
-        return '\033[44m[ INFO ]\033[0m     '
+        return '\r\033[44m[ INFO ]\033[0m     '
 
 printing_lock = threading.Lock()
 
