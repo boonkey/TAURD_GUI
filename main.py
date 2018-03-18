@@ -101,16 +101,16 @@ if __name__ == "__main__":
         g.client_connect()
         print_message("Live mode setup completed",'ok')
     print_message('Starting worker threads', 'info')
-    logger_thread = WorkerThread(g, 1)
     listener_thread = WorkerThread(g, 0)
-    webInterface_thread = WorkerThread(g, 2, verbose='verbose' in sys.argv)
-    webInterface_thread.daemon = True
     listener_thread.daemon = True
-    logger_thread.daemon = True
     listener_thread.start()
     print_message('Listener thread started', 'ok')
+    logger_thread = WorkerThread(g, 1)
+    logger_thread.daemon = True
     logger_thread.start()
     print_message('Logger thread started', 'ok')
+    webInterface_thread = WorkerThread(g, 2, verbose='verbose' in sys.argv)
+    webInterface_thread.daemon = True
     webInterface_thread.start()
     print_message('WebInterface thread started', 'ok')
     print_message('Initialization completed succesfully', 'ok')
