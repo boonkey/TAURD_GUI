@@ -64,3 +64,14 @@ def showoff():
         for j in range(0, 9):
             print "\033[%d%dm@" % (i, j),
         print ''
+
+sensor_conf = "1:speed,0,120;" \
+                      "2:rpm,0,8000;" \
+                      "3:braking,0,100;" \
+                      "4:throttle,0,100;" \
+                      "5:wing_position,-100,100;" \
+                      "6:voltage,9,14;" \
+                      "7:oil_temp,60,130;" \
+                      "8:water_temp,60,130;" \
+                      "9:fuel_consumption,0,25;" \
+                      "10:random_gague,0,256;<FIN>"

@@ -21,7 +21,15 @@ class GuiReceiver:
         self.udp_socket = socket(AF_INET, SOCK_DGRAM)
         self.udp_socket.setsockopt(SOL_SOCKET, SO_BROADCAST, 1)
         self.udp_socket.settimeout(0.2)
-        self.udp_socket.bind(('', 5001))
+        self.ready = True
+        try:
+            self.udp_socket.bind(('', 5001))
+        except error, e:
+            if e[0] == 98:
+                print_message('Client already running. Exiting', 'fail')
+                self.ready = False
+            else:
+                raise
         # if 'linux' in sys.platform:
         #     os.system("sudo ifconfig eth1 192.168.1.6")
 
@@ -96,20 +104,13 @@ if __name__ == "__main__":
     print_message('Starting up...', 'info')
     offline = False
     g = GuiReceiver(verbose='verbose' in sys.argv)
+    if not g.ready:
+        print_message("Good Bye!", 'info')
+        sys.exit(-1)
     # showoff()
     if 'offline' in sys.argv:
         offline = True
         print_message("Starting in offline mode!", 'info')
-        sensor_conf = "1:speed,0,120;" \
-                      "2:rpm,0,8000;" \
-                      "3:braking,0,100;" \
-                      "4:throttle,0,100;" \
-                      "5:wing_position,-100,100;" \
-                      "6:voltage,9,14;" \
-                      "7:oil_temp,60,130;" \
-                      "8:water_temp,60,130;" \
-                      "9:fuel_consumption,0,25;" \
-                      "10:random_gague,0,256;<FIN>"
         g.analyize_sensor_configuration(sensor_conf)
         g.logger = Logger(g.sensors)
         g.logger.log_init()
