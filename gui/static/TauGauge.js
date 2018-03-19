@@ -19,15 +19,23 @@ var gaugeOptions = {
     "braking": brakingGaugeOptions,
     "throttle": throttleGaugeOptions,
     "wing_position": wingPosGaugeOptions,
+    "voltage": voltageGaugeOptions,
+    "water_temp": tempGaugeOptions,
+    "oil_temp": tempGaugeOptions,
+    "fuel_consumption": consumptionGaugeOptions,
 };
 
 // dictionary for known gauge units
 var gaugeUnits = {
-    "speed": "Kmph",
-    "rpm": "rpm",
+    "speed": "Km/h",
+    "rpm": "RPM",
     "braking": "%",
     "throttle": "%",
     "wing_position": "°",
+    "voltage": "Volts",
+    "oil_temp": "°C",
+    "water_temp": "°C",
+    "fuel_consumption": "Km/L",
 };
 
 /**

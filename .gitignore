@@ -116,3 +116,5 @@ conf_command.sh
 .vscode
 *.csv
 tmp*
+sender.py
+.idea/

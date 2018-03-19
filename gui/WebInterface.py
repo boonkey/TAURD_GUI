@@ -1,14 +1,13 @@
 from flask import Flask,render_template, request, jsonify
 from common import *
-import os, json, logging
+import json, logging
 
 app = Flask(__name__)
 
-
 class WebInterface:
-    def __init__(self, verbose=False):
+    def __init__(self, _verbose=False):
         self.info = "dan"
-        if not verbose:
+        if not _verbose:
             log = logging.getLogger('werkzeug')
             log.setLevel(logging.ERROR)
         else:
@@ -27,25 +26,24 @@ class WebInterface:
                         data="".join(f.readlines())
                     return jsonify(data)
                 elif request.args.get('task') == 'get_data':
-                    #Browser - sending sensors value
+                    # Browser - sending sensors value
                     try:
                         with open('tmp','r') as f:
                             data="".join(f.readlines())
                         return jsonify(data)
                     except IOError, e:
-                        print_message('WebInterface - tmp file not found')
                         if e.errno != 2:
                             raise
-
-
-        #Browser - saving sensors value
+                        print_message('WebInterface - tmp file not found', 'warn')
+        # Browser - saving sensors value
+        # print_message('Browser - saving sensors value', 'info')
         sensor_data = json.dumps(request.args)
         with open('tmp','w') as f:
             f.write(sensor_data)
         return sensor_data
 
     def run(self, guireceiver):
-        if guireceiver == None:
+        if guireceiver is None:
             raise NotImplementedError
         print_message('Site is Starting', 'info')
         app.run(port=8000, host="127.0.0.1")
