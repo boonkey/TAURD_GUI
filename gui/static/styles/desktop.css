@@ -1,0 +1,19 @@
+/* General style */
+ .left_sidebar {
+            height: 100%;
+            width: 20%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: #051f49;
+            }
+
+.right_sidebar {
+        height: 100%;
+        width: 20%;
+        position: fixed;
+        top: 0;
+        left: 0;
+        background-color: #051f49;
+        float: right;
+        }
