@@ -13,7 +13,16 @@
         width: 20%;
         position: fixed;
         top: 0;
-        left: 0;
-        background-color: #051f49;
-        float: right;
+        right: 0;
+        background-color: #068fff;
+        #margin-right: 100%;
         }
+
+.console {
+    height: 20%;
+    width: 60%;
+    position: fixed;
+    bottom: 0;
+    left: 20%;
+    background-color: #ff0200;
+}

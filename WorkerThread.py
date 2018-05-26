@@ -88,7 +88,7 @@ class WorkerThread(Thread):
                         if self.verbose:
                             start = time.time()
                             print_message('Logger reset round time: %f' %(start - end), 'verb')
-                        values = self.guireceiver.message_queue.get(timeout=0.1)
+                        values = self.guireceiver.message_queue.get(timeout=0.5)
                         if self.verbose:
                             print_message('Logger - message arrived in queue. Queue size: %d' %self.guireceiver.message_queue.qsize(), 'verb')
                         string_values = ["%s=%s" %(key,value) for key,value in values.iteritems()]

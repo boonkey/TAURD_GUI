@@ -2,7 +2,12 @@ from socket import *  #
 from Sensor import Sensor
 from Logger import Logger
 from WorkerThread import WorkerThread
-from multiprocessing import Process, Queue
+#from multiprocessing import Process, Queue
+try:
+    from multiprocessing import Process, Queue
+except ImportError:
+    from threading import Thread as Process
+    from queue import Queue
 from threading import Thread
 import os, errno, signal, csv, sys, json
 from common import *
