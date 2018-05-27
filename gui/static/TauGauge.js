@@ -12,7 +12,7 @@ var gaugeTemplate = "\n\
 </div>\n\
 ";
 
-//  dictionary for known gauge ooptions
+//  dictionary for known gauge options
 var gaugeOptions = {
     "speed": SpeedGaugeOptions,
     "rpm": rpmGaugeOptions,
@@ -92,7 +92,14 @@ class TauGauge {
     static addNewGaugeElement(name) {
         const $container = $('<div class="gaugeContainer" id="' + name + '"></div>');
         $container.append(gaugeTemplate);
-        $('body').append($container);
+        $container.click(function () {
+            var color = $container.css('background-color');
+            if (color == "rgb(153, 153, 153)")
+                $container.css('background-color',"#068fff");
+            else
+                $container.css('background-color',"#999999");
+        })
+        $('body').find("div.left_sidebar").append($container);
         return $container;
     }
 

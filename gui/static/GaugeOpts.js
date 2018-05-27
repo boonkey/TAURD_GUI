@@ -52,8 +52,8 @@ var defaultGaugeOptions = {
 
 var SpeedGaugeOptions = {
     angle: -0.1,
-    lineWidth: 0.44,
-    radiusScale: 0.8,
+    lineWidth: 0.44, //0.44,
+    radiusScale: 0.8, //0.8,
     pointer: {
         length: 0.6,
         strokeWidth: 0.035,

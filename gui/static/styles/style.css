@@ -1,4 +1,15 @@
 /* General style */
+div.left_sidebar {
+    height: 100%;
+    width: 255px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #051f49;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
 div.gaugeContainer {
     background-color: #999999;
     display: inline-block;
@@ -12,9 +23,21 @@ canvas.gauge {
     margin: 0 auto;
 }
 
+
+
+/*
+canvas.gauge {
+    width: 180px;
+    height: 180px;
+    margin-top: 0px;
+    margin-right: 10px;
+}
+*/
+
 div.title {
     font-size: 25px;
-    text-align: center;
+    text-align: left;
+    margin-left: 10px;
 }
 
 div.display {
