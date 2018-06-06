@@ -10,6 +10,38 @@ div.left_sidebar {
     overflow-x: hidden;
 }
 
+div.right_sidebar {
+    height: 100%;
+    width: 240px;
+    position: fixed;
+    top: 0;
+    right: 0;
+    background-color: #21ff00;
+    #margin-right: 100%;
+}
+
+div.mainview {
+    height: 100%;
+    width: 900px;
+    position: fixed;
+    top: 0;
+    left: 240px;
+    background-color: #ff44ba;
+    #margin-right: 100%;
+}
+
+
+button.control_button{
+    height: 50px;
+    width: 200px;
+    margin-top: 10px;
+    margin-left: 20px;
+    background-color: aqua;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+
 div.gaugeContainer {
     background-color: #999999;
     display: inline-block;

@@ -99,7 +99,7 @@ def signal_handler(signum, frame):
 if __name__ == "__main__":
     global g, logger_thread, listener_thread
     signal.signal(signal.SIGINT, signal_handler)
-    print_message('Welcome To TAURD GUI', 'info')
+    print_message('Welcome To TTAURD TELEMATRY SYSTEM', 'info')
     print_message('Starting up...', 'info')
     offline = False
     g = GuiReceiver(verbose='verbose' in sys.argv)

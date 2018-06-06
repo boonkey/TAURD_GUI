@@ -8,15 +8,6 @@
             background-color: #051f49;
             }
 
-.right_sidebar {
-        height: 100%;
-        width: 20%;
-        position: fixed;
-        top: 0;
-        right: 0;
-        background-color: #068fff;
-        #margin-right: 100%;
-        }
 
 .console {
     height: 20%;
