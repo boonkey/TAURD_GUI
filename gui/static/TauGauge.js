@@ -94,14 +94,30 @@ class TauGauge {
         $container.append(gaugeTemplate);
         $container.click(function () {
             var color = $container.css('background-color');
-            if (color == "rgb(153, 153, 153)")
-                $container.css('background-color',"#068fff");
-            else
-                $container.css('background-color',"#999999");
+            if (color == "rgb(153, 153, 153)") {
+                $container.css('background-color', "#068fff");
+                $("#chartContainer" + name).css('display', 'block');
+            }
+            else {
+                $container.css('background-color', "#999999");
+                $("#chartContainer" + name).css('display', 'none');
+            }
         })
         $('body').find("div.left_sidebar").append($container);
         return $container;
     }
+
+    /**
+     * creates new graph DOM element using template
+     * @param {name of the graph to create} name
+     */
+    static addNewGraphElement(name) {
+        //const $container = $('<div class="chartContainer" id="chartContainer' + name + '"></div>');
+        const $container = $('<div class="chartContainer" id="chartContainer' + name + '">' + name + '</div>');
+        $('body').find("div.mainview").append($container);
+        return $container;
+    }
+
 
     /**
      * gets the correct options for the gauge of that name

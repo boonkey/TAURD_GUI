@@ -26,9 +26,19 @@ div.mainview {
     position: fixed;
     top: 0;
     left: 240px;
-    background-color: #ff44ba;
+    overflow-y: scroll;
+    #overflow-x: scroll;
+    background-image: url("../background.jpg");
     #margin-right: 100%;
 }
+
+div.chartContainer {
+    display: none;
+    height: 275px;
+    background-color: #BBBBBB;
+    margin-top: 20px;
+}
+
 
 
 button.control_button{

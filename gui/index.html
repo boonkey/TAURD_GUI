@@ -7,48 +7,11 @@
 
         <script src="static/Dependencies/jquery.min.js"></script>
         <script src="static/Dependencies/gauge.min.js"></script>
+        <script src="static/Dependencies/canvasjs.min.js"></script>
+
         <script src="static/GaugeOpts.js"></script>
         <script src="static/TauGauge.js"></script>
         <script src="static/Main.js"></script>
-
-        <script type="text/javascript" src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
-        <script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
-        <script type="text/javascript">
-            window.onload = function() {
-                var dataPoints = [];
-
-                function getDataPointsFromCSV(csv) {
-                    var dataPoints = csvLines = points = [];
-                    csvLines = csv.split(/[\r?\n|\r|\n]+/);
-
-                    for (var i = 0; i < csvLines.length; i++)
-                        if (csvLines[i].length > 0) {
-                            points = csvLines[i].split(",");
-                            dataPoints.push({
-                                x: parseFloat(points[0]),
-                                y: parseFloat(points[1])
-                            });
-                        }
-                    return dataPoints;
-                }
-                $.get("TAURD_log-2018-06-06_11-28-29.csv", function(data) {
-                    var chart = new CanvasJS.Chart("chartContainer", {
-                        title: {
-                            text: "Chart from CSV",
-                        },
-                        data: [{
-                            type: "line",
-                            dataPoints: getDataPointsFromCSV(data)
-                        }]
-                    });
-
-                    chart.render();
-
-                });
-            }
-        </script>
-
-
         <title>TAURD TELEMATRY SYSTEM</title>
         <link rel="icon" href="static/icon.jpg">
     </head>
@@ -59,6 +22,7 @@
             <button class="control_button" id="endurance" onclick="alert('RELIABILITY IS EVERYTHING')">Endurance Mode</button>
             <button class="control_button" id="slipandslide" onclick="alert('SLIP AND SLIDE')">8 Mode</button>
         </div>
-        <div id="chartContainer" class="mainview"></div>
+        <div id="graphContainer" class="mainview">
+        </div>
     </body>
 </html>
